@@ -9,13 +9,13 @@ public class StandaloneClient {
 	public static void main(String[]args) throws NamingException {
    	
     System.out.println("Getting the Remote");
-    //SumRemote remote = (SumRemote) getInitialContext().lookup("ejb:/EjbRemote/Sum!" + SumRemote.class.getName());
+    //SumRemote remote = (SumRemote) getInitialContext().lookup("ejb:/EjbSum/Sum!" + SumRemote.class.getName());
     //Results:Got the remote InterfaceProxy for remote EJB StatelessEJBLocator for "/EjbRemote/Sum", view is interface SumRemote, affinity is None
 
-	//SumRemote remote = (SumRemote) getInitialContext().lookup("ejb:/EjbRemote/Sum!Sum");
+	//SumRemote remote = (SumRemote) getInitialContext().lookup("ejb:/EjbSum/Sum!Sum");
     //Results: Exception in thread "main" java.lang.IllegalArgumentException: Sum is not an interface
 
-    SumRemote remote = (SumRemote) getInitialContext().lookup("ejb:/EjbRemote/Sum!SumRemote");
+    SumRemote remote = (SumRemote) getInitialContext().lookup("ejb:/EjbSum/Sum!SumRemote");
     //Results: Got the remote InterfaceProxy for remote EJB StatelessEJBLocator for "/EjbRemote/Sum", view is interface SumRemote, affinity is None
 
     System.out.println("Got the remote Interface" + remote);
