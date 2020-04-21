@@ -22,7 +22,7 @@ public class StandaloneSecure {
 
     System.out.println("Got the remote Interface" + remote);
     System.out.println(remote.add(10,10));
-
+    System.out.println(remote.minus(10,10));
 	}
 	//getInitialContext:
 	public static Context getInitialContext(String username, String password) throws NamingException{

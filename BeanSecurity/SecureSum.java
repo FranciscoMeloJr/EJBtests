@@ -12,4 +12,6 @@ public class SecureSum implements SecureSumRemote
 	public int add(int a, int b){
 		return a+b;
 	}
+	@RolesAllowed("admin")
+	public int minus(int a, int b){ return a - b; }
 }
