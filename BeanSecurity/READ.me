@@ -1,0 +1,19 @@
+Test with security:
+
+1. Added a security realm
+2. Modified the bean
+	@Remote(SecuredEJBRemote.class)
+	@RolesAllowed({ "guest" })
+	@SecurityDomain("other")
+3. Use Wildfly-config.xml
+~~~
+  <configuration name="default-config">
+                <set-user-name name="quickstartUser"/>
+                <credentials>
+                    <clear-password password="quickstartPwd1!"/>
+                </credentials>
+                <sasl-mechanism-selector selector="DIGEST-MD5"/>
+                <providers>
+                    <use-service-loader />
+</providers>
+~~~
