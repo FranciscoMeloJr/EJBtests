@@ -7,11 +7,13 @@ import java.util.Properties;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
  
+ import javax.naming.Context;
+
 public class EJBTester {
  
    BufferedReader brConsoleReader = null; 
    Properties props;
-   InitialContext ctx;
+   Context ctx;
    {
       props = new Properties();
       try {
@@ -20,8 +22,8 @@ public class EJBTester {
          ex.printStackTrace();
       }
       try {
-         ctx = new InitialContext(props);            
-      } catch (NamingException ex) {
+         ctx = getInitialContext();            
+      } catch (Exception ex) {
          ex.printStackTrace();
       }
       brConsoleReader = 
@@ -41,6 +43,15 @@ public class EJBTester {
       System.out.println("**********************");
       System.out.print("Options \n1. Add Book\n2. Exit \nEnter Choice: ");
    }
+
+      //getInitialContext:
+   public static Context getInitialContext() throws NamingException, IOException{
+      Properties props = new Properties();
+      props.load(new FileInputStream("jndi.properties"));
+      final Context context = new InitialContext(props);
+      return context;
+   }
+
    
    private void testStatelessEjb() {
  
@@ -65,12 +76,12 @@ public class EJBTester {
             }
          }
  
-         List<Book> booksList = libraryBean.getBooks();
+         List<String> booksList = libraryBean.getBooks();
  
          System.out.println("Book(s) entered so far: " + booksList.size());
          int i = 0;
-         for (Book book:booksList) {
-            System.out.println((i+1)+". " + book.getName());
+         for (String book:booksList) {
+            System.out.println((i+1)+". " + book);
             i++;
          }       
          LibraryStatefulSessionBeanRemote libraryBean1 = 
@@ -82,7 +93,8 @@ public class EJBTester {
             "Book(s) entered so far: " + booksList1.size());
          for (int j = 0; j < booksList1.size(); ++j) {
             System.out.println((i+1)+". " + booksList1.get(i));
-         }		 
+         }	
+         	 
       } catch (Exception e) {
          System.out.println(e.getMessage());
          e.printStackTrace();
