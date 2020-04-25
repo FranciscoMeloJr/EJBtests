@@ -22,13 +22,17 @@ public class LdapConfig {
 
     try {
       InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
+      config.addAdditionalBindCredentials("cn=Directory Manager", "password");
       config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("default", 10389));
       config.setSchema(null);
+
       inMemoryDirectoryServer = new InMemoryDirectoryServer(config);
-      inMemoryDirectoryServer.importFromLDIF(true,
-          new LDIFReader(this.getClass().getResourceAsStream("/user.ldif")));
+      //LDI Reader:
+      LDIFReader ldifFilePath = new LDIFReader(this.getClass().getResourceAsStream("/config.ldif"));
+      inMemoryDirectoryServer.importFromLDIF(true, ldifFilePath);
       inMemoryDirectoryServer.startListening();
     } catch (LDAPException e) {
+      System.out.println("Exception on LDAP");
       e.printStackTrace();
     }
   }
