@@ -22,8 +22,7 @@ public class LdapConfig {
 
     try {
       InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
-      config.addAdditionalBindCredentials("cn=Directory Manager,uid: director", "josias");
-      config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("default", 8080));
+      config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("default", 10389));
       config.setSchema(null);
       inMemoryDirectoryServer = new InMemoryDirectoryServer(config);
       inMemoryDirectoryServer.importFromLDIF(true,

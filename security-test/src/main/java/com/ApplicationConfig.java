@@ -10,7 +10,7 @@ import javax.security.enterprise.identitystore.LdapIdentityStoreDefinition;
     loginToContinue = @LoginToContinue(loginPage = "/index.xhtml", errorPage = "/error.xhtml")
 )
 @LdapIdentityStoreDefinition(
-    url = "ldap://localhost:8080",
+    url = "ldap://localhost:10389",
     callerSearchBase = "ou=Users,dc=example,dc=com",
     groupSearchBase = "ou=Groups,dc=example,dc=com",
     groupSearchFilter = "(&(member=%s)(objectClass=groupOfNames))"
