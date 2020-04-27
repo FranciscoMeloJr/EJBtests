@@ -23,15 +23,7 @@ public class StandaloneFile {
       //this returns java.naming.provider.url
 	  System.out.println(Context.PROVIDER_URL.toString());
 
-      Context context = getContextFile();
-
-      System.out.println("Listing all Names");
-      NamingEnumeration namingenumeration = context.listBindings("");
-      while (namingenumeration.hasMore()) {
-          Binding binding = (Binding)namingenumeration.next();
-          System.out.println(binding.getName() + " === " + binding.getObject());
-      }
-
+      Context context = getContextDirectly();
     }
     catch (NamingException namingexception) {
          System.out.println("Name not here");
@@ -39,7 +31,7 @@ public class StandaloneFile {
 
   }
 
-  //Create Context from file:
+  //Create Context from file: jndi.properties
   public static Context getContextFile() throws NamingException{
   	 System.out.println("Reading from file");
 
@@ -72,8 +64,8 @@ public class StandaloneFile {
   //Create Context hard coded:
   public static Context getContextDirectly() throws NamingException{
   	  System.out.println("Directly");
-      Context ctx = new InitialContext();
-      SumRemote remote = (SumRemote) ctx.lookup("java:global/EjbSum/Sum");
+      String jndiName="java:app/EjbSum/Sum!SumRemote";//ctx.lookup("java:global/EjbSum/Sum!SumRemote");
+      SumRemote remote = (SumRemote) InitialContext.doLookup(jndiName); 
       System.out.println("Got the remote Interface" + remote);
       System.out.println(remote.add(10,10));
       return null;

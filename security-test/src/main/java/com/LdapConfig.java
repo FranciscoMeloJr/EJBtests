@@ -22,7 +22,7 @@ public class LdapConfig {
 
     try {
       InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=example,dc=com");
-      config.addAdditionalBindCredentials("cn=Directory Manager", "password");
+      //config.addAdditionalBindCredentials("cn=Directory Manager", "password");
       config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("default", 10389));
       config.setSchema(null);
 

@@ -10,6 +10,11 @@ objectclass: top
 objectclass: organizationalUnit
 ou: Users
 
+dn: ou=Groups,dc=example,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: Groups
+
 dn: uid=admin,ou=Users,dc=example,dc=com
 objectclass: top
 objectclass: uidObject
@@ -19,9 +24,24 @@ cn: Administrator
 sn: Admin
 userPassword: p@ssw0rd
 
+dn: uid=user,ou=Users,dc=example,dc=com
+objectclass: top
+objectclass: uidObject
+objectclass: person
+uid: user
+cn: User
+sn: User
+userPassword: p@ssw0rd
 
 dn: cn=admin,ou=Groups,dc=example,dc=com
 objectclass: top
 objectclass: groupOfNames
 cn: admin
 member: uid=admin,ou=Users,dc=example,dc=com
+
+dn: cn=user,ou=Groups,dc=example,dc=com
+objectclass: top
+objectclass: groupOfNames
+cn: user
+member: uid=admin,ou=Users,dc=example,dc=com
+member: uid=user,ou=Users,dc=example,dc=com

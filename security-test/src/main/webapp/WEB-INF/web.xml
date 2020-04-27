@@ -28,6 +28,8 @@
     <welcome-file>index.xhtml</welcome-file>
   </welcome-file-list>
 
+  <deny-uncovered-http-methods/>
+
   <!-- SECURITY -->
   <security-constraint>
     <web-resource-collection>
