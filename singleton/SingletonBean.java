@@ -6,11 +6,11 @@ import javax.ejb.Startup;
 import javax.ejb.Stateless;
 import javax.ejb.EJB;  
 
-@Singleton
+@Singleton(name="josias")
  
 @Remote
 @Startup
-//@EJB(name = "java:jboss/exported/SingletonBean", beanInterface = SingletonBean.class)  
+@EJB(name = "ejb/josias", beanInterface = SingletonBean.class, beanName="josias")  
 
 public class SingletonBean implements SingletonX {
     int total;

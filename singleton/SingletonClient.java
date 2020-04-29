@@ -9,7 +9,7 @@ public class SingletonClient {
 	public static void main(String[]args) throws NamingException {
    	
     System.out.println("Getting the Remote");
-    SingletonX remote = (SingletonX) getInitialContext().lookup("ejb:/Singleton/SingletonBean!SingletonX");
+    SingletonX remote = (SingletonX) getInitialContext().lookup("java:global/ejb/josias");
 
     System.out.println("Got the remote" + remote);
     remote.add(1);
