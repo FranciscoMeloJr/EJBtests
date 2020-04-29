@@ -18,6 +18,7 @@ public class SingletonBean implements SingletonX {
     @PostConstruct
     public void startup() {
         System.out.println("Singleton inited!");
+        total = 0;
     }
  
      
