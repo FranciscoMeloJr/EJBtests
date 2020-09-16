@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://java.sun.com/xml/ns/javaee" 
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+id="WebApp_ID" version="2.5">
+  <display-name>NextGenMon</display-name>
+  <welcome-file-list>
+    <welcome-file>doStart</welcome-file>
+    <!-- 
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+     -->
+  </welcome-file-list>
+  <servlet>
+    <description>Execute a JNDI connection</description>
+    <display-name>NextGen Connection Test</display-name>
+    <servlet-name>chkConnect</servlet-name>
+    <servlet-class>org.sync.mw.view.NxtGenConn</servlet-class>
+  </servlet>
+  <servlet>
+    <description>Execute OS Stat Collection</description>
+    <display-name>NexGen OS Stats</display-name>
+    <servlet-name>ngStatOS</servlet-name>
+    <servlet-class>org.sync.mw.view.CallStatsOS</servlet-class>
+  </servlet>
+  <servlet>
+    <description>Execute Apache JBoss Stat Collection</description>
+    <display-name>NexGen JB Stats</display-name>
+    <servlet-name>ngStatJB</servlet-name>
+    <servlet-class>org.sync.mw.view.EvalJBoss</servlet-class>
+  </servlet>
+  <servlet>
+    <description>Display NextGenMon Version</description>
+    <display-name>NextGenMon Version</display-name>
+    <servlet-name>Version</servlet-name>
+    <servlet-class>org.sync.mw.view.Version</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>chkConnect</servlet-name>
+    <url-pattern>/chkConnect</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>chkConnect</servlet-name>
+    <url-pattern>/doStart</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ngStatOS</servlet-name>
+    <url-pattern>/osStats</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ngStatJB</servlet-name>
+    <url-pattern>/jbStats</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ngStatJB</servlet-name>
+    <url-pattern>/evalJBoss</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Version</servlet-name>
+    <url-pattern>/version</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Version</servlet-name>
+    <url-pattern>/help</url-pattern>
+  </servlet-mapping>
+  <resource-ref>   
+    <res-ref-name>jdbc/dmtTmpDbu</res-ref-name>   
+    <res-type>javax.sql.DataSource</res-type>   
+    <res-auth>Container</res-auth>   
+</resource-ref> 
+</web-app>

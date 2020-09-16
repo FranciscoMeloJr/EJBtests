@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Built-By: ialex
+Class-Path: javassist-3.20.0-GA.jar
+Created-By: Apache Maven 3.3.9
+Build-Jdk: 1.8.0_91
+Main-Class: org.jboss.tattletale.Main
+

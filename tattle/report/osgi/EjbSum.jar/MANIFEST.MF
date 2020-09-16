@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Created-By: 1.7.0_171 (Oracle Corporation)
+
+
+### OSGi information
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: UNKNOWN
+Bundle-Description: EjbSum
+Bundle-Name: EjbSum
+Bundle-Version: 0.0.0
+Export-Package: 
+Import-Package: java.lang,javax.ejb

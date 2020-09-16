@@ -1,0 +1,520 @@
+package org.sync.mw.util;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import org.jboss.as.cli.CliInitializationException;
+import org.jboss.as.cli.CommandContext;
+import org.jboss.as.cli.CommandContextFactory;
+import org.jboss.as.cli.CommandFormatException;
+import org.jboss.as.cli.CommandLineException;
+//import org.jboss.as.cli.impl.CommandContextConfiguration;
+//import org.jboss.as.cli.scriptsupport.CLI;
+//import org.jboss.as.cli.scriptsupport.CLI.Result;
+import org.jboss.as.controller.client.ModelControllerClient; 
+import org.jboss.dmr.ModelNode;
+
+import com.google.gson.Gson;
+
+//import org.jboss.dmr.JSONParser;
+//import org.jboss.dmr.stream.*;
+import org.jboss.logging.Logger;
+import org.sync.mw.data.DbStoreMwStats;
+
+//import java.lang.management.ManagementFactory;
+//import java.lang.management.MemoryPoolMXBean;
+//import java.lang.management.MemoryType;
+//import java.lang.management.MemoryUsage;
+import java.net.InetAddress;
+//import java.net.URL;
+import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+//import java.util.Locale;
+
+
+/*
+ * https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.2/html-single/configuration_guide/index#management_apis
+ * https://stackoverflow.com/questions/9704715/how-to-list-jboss-as-7-datasource-properties-in-java-code
+ * http://www.mastertheboss.com/jboss-server/jboss-as-7/using-jboss-management-api-programmatically
+ * https://www.programcreek.com/java-api-examples/?api=org.jboss.dmr.ModelNode
+ * 
+ */
+
+public class cliDomain {
+
+	/*
+
+	public static void main(String[] args) {
+		
+		callCLI();
+		
+	}
+*/
+	
+	static Gson gson = new Gson();
+	
+	static String dmn = "unknown";
+	static String srvrInst = "unknown"; 
+	
+	//static String domainController = "localhost";
+	static String domainController="lasjmw002";
+	static String baseSrv=domainController;
+	//static int domainPort=9999;
+	static String jboss_admin="jbadmin";
+	static String jboss_pwd="unknown";
+	
+	static private Date tstamp = null;
+	
+	//private static Logger logger = Logger.getLogger("org.sync.mw");
+	
+	private static Logger logger = Logger.getLogger( cliDomain.class.getName() );
+	
+	 
+	
+
+public static String callCLI( String inSrvr, String inBaseSrvr, Date inTstamp, PrintWriter writer, boolean prtTstHtml,  boolean statStore, Connection pgDBconn   ) {	
+	     
+	     //domainController="lasjmw201-ptbn1.syncreon.local";
+	     //int domainPort = 9990;
+	
+	logger.info("!!!!! This ClassName wouldb be: " + cliDomain.class.getName() +"  !!!!!!");
+	
+	 logger.info("Startup of callCLI (JBoss) for Domain Controller on "+inSrvr);
+	    String dmnHomeDir="unknown";
+	     
+		if ( inSrvr != null && inSrvr.length() > 0 ) {
+		  domainController=inSrvr;		
+		}
+		if ( inBaseSrvr != null && inBaseSrvr.length() > 0 ) {
+			  baseSrv=inBaseSrvr;		
+		}
+		
+	     Instant startJinfo = Instant.now();
+	     DateTimeFormatter prtDtTm = DateTimeFormatter.ofPattern("YYYYMMdd HH:mm:ss");
+	     tstamp=inTstamp;
+	     
+	     //domainPort = syncPropObj.getProp("jboss_cli_port",9999); 
+	     jboss_admin = syncPropObj.getProp("jboss_admin","jbadmin");
+	     jboss_pwd = syncPropObj.getProp("jboss_pwd","jboss2017");
+	     
+	     System.out.println("!!!!! cliDomain !! Server: " + domainController + "  ... "+LocalDateTime.ofInstant(startJinfo, ZoneOffset.systemDefault()).format(prtDtTm)  );
+	     logger.info("!!!!! cliDomain !! Server: " + domainController + "  ... "+LocalDateTime.ofInstant(startJinfo, ZoneOffset.systemDefault()).format(prtDtTm)  );
+         
+	     ModelNode cliCommand = null;  
+	     
+		try {
+		    CommandContext ctx; 
+//!!!!!!!! simple command context 
+		 
+		    //String jbossURI = new URI("remote+http",domainController,String.valueOf(domainPort)).toString();
+		    //logger.info("!  !! URI?: " + jbossURI);
+		    
+		    
+			 ctx = CommandContextFactory.getInstance().newCommandContext(jboss_admin, jboss_pwd.toCharArray());
+			 
+			 ctx.setCommandTimeout(20);
+		    
+			//VVVVVV ????????? VVVVVVVVVVVVV
+			//ctx = CommandContextFactory.getInstance().newCommandContext(jbossURI, "jbadmin", "jboss2017".toCharArray());
+			
+				//ctx = CommandContextFactory.getInstance().newCommandContext(jbossURI, "jbadmin", "jboss2017".toCharArray());
+			
+			
+			 
+			//logger.info(" .... Server Port: "+domainPort + "  ..... DEFAULT CTX Port: "+ ctx.getControllerPort() );
+ 
+			//ctx = CommandContextFactory.getInstance().newCommandContext();
+			
+			//			ctx.connectController(domainController, domainPort);
+			//ctx.connectController(domainController );
+			
+			//ctx.connectController( new URI("remote+http",null,domainController,domainPort,null,null,null).toString() );
+			//ctx.connectController(jbossURI);
+			
+			
+			if ( domainController.equals("localhost")) {
+				domainController=InetAddress.getLocalHost().getHostName().toLowerCase();
+			}
+			
+			ctx.connectController(domainController );
+			logger.info("!  !! CLI Connect Domain Controller completed   " );
+
+		    writer.println("<br>=====   Server: " + domainController + "  ... "+LocalDateTime.ofInstant(startJinfo, ZoneOffset.systemDefault()).format(prtDtTm)  );
+		    logger.info(" .... Server Domain Controller: "+domainController);
+			
+			String chkRunType=":read-attribute(name=launch-type)";
+			//writer.println("<br>..... Cmd: " + chkRunType);
+			cliCommand = ctx.buildRequest(chkRunType);
+			String hostType = executeCommand(ctx,cliCommand, writer, prtTstHtml).get("result").asString();
+					
+           writer.println("<br>===== HostType: "+hostType);
+			
+			List<String> listHost = new ArrayList<String>();
+			
+			if ( ! hostType.equals("STANDALONE")) {
+			
+			  String request1=":read-children-names(child-type=host)";
+			  cliCommand = ctx.buildRequest(request1);
+			  String hostJSON = executeCommand(ctx,cliCommand, writer, prtTstHtml).toString();
+			  listHost = parseJSONArray(hostJSON);			
+			} else {
+			  listHost.add(hostType);	
+			}
+			
+			//writer.println("<br>===== Hosts ("+listHost.size()+")  val1 =" + listHost.get(0));
+			
+			for (String hostName : listHost) {
+				writer.println("<br>=====JBossHost: " + hostName);
+				
+				List<String> listServers = new ArrayList<String>();
+
+				if (hostName.equals("STANDALONE")) {
+					listServers.add(hostName);
+				} else {
+					String request2 = "/host="+hostName+":read-children-names(child-type=server)";
+					cliCommand = ctx.buildRequest(request2);
+					String serverJSON = executeCommand(ctx, cliCommand, writer, prtTstHtml).toString();
+					listServers = parseJSONArray(serverJSON);
+					
+				}
+				
+				for ( String server : listServers ) {
+					String srvrRoot;
+					if ( server.equals("STANDALONE")) {
+					  srvrRoot="";
+					  srvrInst="STANDALONE";
+
+					} else {
+					  srvrRoot ="/host="+hostName+"/server="+server ;
+					  int subInstPos = server.indexOf('-');
+					  if ( subInstPos > 0 && subInstPos+1 < server.length() ) {
+						  srvrInst = server.substring(subInstPos+1);						  
+					  } else {
+						  srvrInst = server;
+					  }
+					}
+					String request3 = srvrRoot+":read-attribute(name=server-state)";
+					cliCommand = ctx.buildRequest(request3);
+					String srvState = parseJSONString(executeCommand(ctx,cliCommand, writer, prtTstHtml).toString());
+					writer.println("<br> ==== Instance: " + server + " &lt;"+srvrInst+"&gt; ...  State: "+srvState+" ");	
+					logger.info(" ..-- Instance: " + server + " <"+srvrInst+"> ...  State: "+srvState+" ");
+					
+if ( srvState.equals("running"))
+{	
+					String getHomDir = srvrRoot+"/core-service=server-environment:read-attribute(name=home-dir)";
+					// System.out.println("!!! getHomeDir Command: " +getHomDir);
+					cliCommand = ctx.buildRequest(getHomDir);
+					logger.info(" .... CLI cmd: get Home Dir> " + getHomDir+" ");
+					
+					
+					//?????
+					String JBossHomeDir = parseJSONString(executeCommand(ctx,cliCommand, writer, prtTstHtml).toString());
+					writer.println("<br> ====  JB Home:" + JBossHomeDir);	
+					logger.info(" .... CLI rtn: get Home Dir> " + JBossHomeDir +" ");
+					
+					String tmpDmnStr = JBossHomeDir; // "dmtMix" ;
+					
+					if ( tmpDmnStr == null || tmpDmnStr.length() < 1 ) {
+						tmpDmnStr="MissingDmn";
+						
+					}
+						dmnHomeDir=tmpDmnStr;
+						dmn = tmpDmnStr.toLowerCase(); 
+						int dmnEnd = 0;
+						int ndxDmn=dmn.indexOf("/jb7_")+1;
+						  //writer.println("<div style=\"background-color:fca\">???? --- Chk jb7 NDX of dmn: " + dmn + " .. start at: "+ndxDmn+" </div>");
+						
+						if ( ndxDmn <2 ) { 
+							ndxDmn=8;  // FORCE to 8 as a match to /mw01/jboss/???  directory path
+							dmnEnd = tmpDmnStr.substring(ndxDmn+4).indexOf("/");   // find DOMAIN Dir ending path pos
+							if ( dmnEnd < 3) ndxDmn=0;  // test possible domain name and make sure it is a DOMAIN HOME
+						}
+											
+						if ( ndxDmn > 2 ) {		// if valid DOMAIN position then determin path and setup Arguments for chkApache			  
+						  String dmnTmp=tmpDmnStr.substring(ndxDmn+4);
+						  dmnEnd=dmnTmp.indexOf("/");
+						  
+						  //writer.println("<div style=\"background-color:fca\">???? --- dmnTmp: " + dmnTmp + " .. start at: "+ndxDmn+" .. with  / found at: "+dmnEnd +"</div>");
+						  if ( dmnEnd > 1) {
+							  dmn=dmnTmp.substring(0,dmnEnd);
+							  dmnHomeDir=dmn+"~"+tmpDmnStr.substring(0,ndxDmn+4+dmnEnd) ;
+						  }
+						} else {
+						  String dmnOth = dmn.substring(12,Math.min(dmn.length(), 17) );
+						  logger.warn(" .... Could not PARSE jb7_ in dmnHomeDir, setting Domain to> " + dmnOth +" "); 
+						  writer.println("<div style=\"background-color:eea\"><hr>!!! Could not PARSE jb7_ in dmnHomeDir, setting Domain to> " + dmnOth + "<hr></div>");	
+						  dmn=dmnOth;
+						}
+					
+					//writer.println("<br> ==== ?Home Dir: " + JBossHomeDir);	
+					writer.println("<br> ====JB Domain: " + dmn);	
+					writer.println("<br> ==== Dmn~Home: " + dmnHomeDir);	
+					
+					logger.info(" .... JB Dmn~Home: " + dmnHomeDir );
+					
+					if ( srvState.equals("running")) {
+						logger.info(" ---- Calling chkSrvrJNDI --- srvrRoot:" + srvrRoot);
+						writer.println("<br> .... Do JNDI Checks");
+						chkSrvrJNDI(srvrRoot, ctx, cliCommand, writer, prtTstHtml , statStore, pgDBconn );
+
+						logger.info(" ---- Calling chkSrvrJVM ");
+						writer.println("<br> .... Do JVM Memory Review");
+						chkSrvrJVM(srvrRoot, ctx, cliCommand, writer, prtTstHtml , statStore, pgDBconn );
+					}
+				}
+	}
+			}
+			
+		   ModelNode jndiRtn = executeCommand(ctx,cliCommand, writer, prtTstHtml);
+			
+          ctx.disconnectController();
+          
+          jndiRtn.toJSONString(false);
+          
+          writer.println("<br>!!!!! ctx Disconnect Controller executed");
+     	 logger.info("JBoss CLI Controller disconnect completed"); 
+                      
+			
+		} catch (CliInitializationException e1) {
+			
+			logger.error("CliInit Exception: " + e1.getMessage());
+			writer.println("<br><div style=\"background-color:fdd\"><hr color=\"#800000\"><strong>ERROR: </strong>Could not get new Context Instance<hr color=\"#800000\"></div>");
+			e1.printStackTrace();
+		}  
+		catch (CommandFormatException e3) {
+			logger.error("CmdFormat Exception: " + e3.getMessage());
+			
+			if ( cliCommand != null && cliCommand.asString().length() > 0) {
+				writer.println("<br><div style=\"background-color:fdd\"><hr color=\"#800000\"><strong>ERROR:</strong>Command Format Exception<hr color=\"#800000\">"+cliCommand.asString()+"</div>");
+				e3.printStackTrace();
+			} else {
+				writer.println("<br><div style=\"background-color:fdd\"><hr color=\"#800000\"><strong>ERROR:</strong>Command Format Exception<hr color=\"#800000\"> cliCommand WAS NULL or Empty </div>");
+				e3.printStackTrace();
+			}
+	    }  
+		catch (CommandLineException e2) {
+			logger.error("CmdLine Exception: " + e2.getMessage());
+			writer.println("<br><div style=\"background-color:fdd\">"
+					+ "<hr color=\"#800000\"><strong>ERROR:</strong>Command Line Exception<br>"
+					+ e2.toString() 
+					+ "<br><hr color=\"#800000\"> </div>");
+			e2.printStackTrace();
+		}  
+		catch (UnknownHostException e) {
+			logger.error("UnknownHost Exception: " + e.getMessage());
+
+			writer.println("<br><div style=\"background-color:fdd\">"
+					+ "<hr color=\"#800000\"><strong>ERROR:</strong>Unknown Host Exception<br>"
+					+ e.toString() 
+					+ "<br><hr color=\"#800000\"> </div>");
+			e.printStackTrace();
+		} 
+		catch ( Exception e) {
+			logger.error("General Exception: " + e.getMessage());
+
+			writer.println("<br><div style=\"background-color:fdd\">"
+					+ "<hr color=\"#800000\"><strong>ERROR:</strong>General Exception<br>"
+					+ e.toString() 
+					+ "<br><hr color=\"#800000\"> </div>");
+			e.printStackTrace();
+		} 
+		/*		catch (IOException e) {
+			e.printStackTrace();
+		}
+		*/ 
+		
+		//listMemUsg();
+	    
+		Instant endJinfo = Instant.now();
+	    long netExecTime = Duration.between(startJinfo, endJinfo).toMillis();
+	    
+	    writer.println("<br><hr>  Start Time : "+LocalDateTime.ofInstant(startJinfo, ZoneOffset.systemDefault()).format(prtDtTm));
+	    writer.println("<br>Finish Time : "+LocalDateTime.ofInstant(endJinfo, ZoneOffset.systemDefault()).format(prtDtTm));
+	    
+	    writer.println("<br>Elapsed (ms): " + netExecTime + "<br>");
+		logger.info("Elapsed time of CLI commands (ms): "+ netExecTime);
+		
+	    return dmnHomeDir;
+	}
+	
+	public static void chkSrvrJVM ( String inSrvrPath, CommandContext ctx, ModelNode cliCommand, PrintWriter writer, 
+			boolean prtTstHtml,  boolean statStore, Connection pgDBconn ) {
+		
+		writer.println("<br>  === Check JVM stats for : " +inSrvrPath);
+		// /subsystem=datasources/data-source=pgMWmonitor/statistics=pool:read-resource(include-runtime=true)
+		
+	try {
+			
+		String cmdRunArgs=inSrvrPath+"/core-service=platform-mbean/type=memory:read-resource(include-runtime=true)";
+		//writer.println("<br>  ... Cmd: " + cmdRunArgs);
+		cliCommand = ctx.buildRequest(cmdRunArgs);
+		ModelNode jvmNode = executeCommand(ctx,cliCommand, writer, prtTstHtml);
+					
+		long jvmHeapUs = jvmNode.get("result").get("heap-memory-usage").get("used").asLong()/1048576;;
+		long jvmHeapCm = jvmNode.get("result").get("heap-memory-usage").get("committed").asLong()/1048576;;
+		long jvmHeapMx = jvmNode.get("result").get("heap-memory-usage").get("max").asLong()/1048576;;
+		long jvmNonHUs = jvmNode.get("result").get("non-heap-memory-usage").get("used").asLong()/1048576;;
+		long jvmNonHCm = jvmNode.get("result").get("non-heap-memory-usage").get("committed").asLong()/1048576;;
+		long jvmNonHMx = jvmNode.get("result").get("non-heap-memory-usage").get("max").asLong()/1048576;;
+					
+		String cmdRunOldGen=inSrvrPath+"/core-service=platform-mbean/type=memory-pool/name=PS_Old_Gen:read-resource(include-runtime=true)";
+		//writer.println("<br>  ... Cmd: " + cmdRunOldGen);
+		cliCommand = ctx.buildRequest(cmdRunOldGen);
+		ModelNode jvmOldGen = executeCommand(ctx,cliCommand, writer, prtTstHtml);
+		//writer.println("<br>  ... OldGenExec>"+jvmOldGen.toString());
+		float jvmOldUs = jvmOldGen.get("result").get("usage").get("used").asLong()/1048576;
+		float jvmOldCm = jvmOldGen.get("result").get("usage").get("committed").asLong()/1048576;
+		float jvmOldMx = jvmOldGen.get("result").get("usage").get("max").asLong()/1048576;
+		
+		float jvmHeapPrc = 100 * jvmHeapUs / jvmHeapMx ;
+		float jvmOldPrc = 100 * jvmOldUs / jvmOldMx ;
+		float jvmNonHPrc = 100 * jvmNonHUs / jvmNonHMx ;
+
+		writer.printf("<br>  ~~>     Heap Mem Used:%5.1f%%  - (MB) Used: %,9.1f  ... Committed: %,9.1f  ... Max: %,9.1f %n",  jvmHeapPrc, (float)jvmHeapUs, (float)jvmHeapCm, (float)jvmHeapMx);						
+		writer.printf("<br>  ~~>  Old Gen Mem Used:%5.1f%%  - (MB) Used: %,9.1f  ... Committed: %,9.1f  ... Max: %,9.1f %n",  jvmOldPrc, (float)jvmOldUs, (float)jvmOldCm, (float)jvmOldMx);						
+		writer.printf("<br>  ~~> Non-Heap Mem Used:%5.1f%%  - (MB) Used: %,9.1f  ... Committed: %,9.1f  ... Max: %,9.1f %n",  jvmNonHPrc, (float)jvmNonHUs, (float)jvmNonHCm, (float)jvmNonHMx);
+		
+		//if ( statStore) DbStoreMwStats.storeJVM(false, pgDBconn, tstamp, domainController, dmn+"-"+srvrInst, jvmHeapMx, 
+		if ( statStore) DbStoreMwStats.storeJVM(false, pgDBconn, tstamp, baseSrv, dmn+"-"+srvrInst, jvmHeapMx, 
+								jvmOldMx, jvmNonHMx, jvmHeapPrc, jvmOldPrc, jvmNonHPrc, logger);
+		
+	} catch (CommandFormatException e) {
+			e.printStackTrace();
+	}
+		
+		
+		
+}
+
+	
+	public static void chkSrvrJNDI ( String inSrvrPath, CommandContext ctx, ModelNode cliCommand, PrintWriter writer, boolean prtTstHtml,  boolean statStore, Connection pgDBconn ) {
+		
+		writer.println("<br>  === Check server JNDI for: " +inSrvrPath);
+		// /subsystem=datasources/data-source=pgMWmonitor/statistics=pool:read-resource(include-runtime=true)
+		String defaultJNDI="pgMWmonitor";
+		
+	try {
+			
+		String cmdRunArgs=inSrvrPath+"/core-service=platform-mbean/type=runtime:read-attribute(name=input-arguments)";
+		//writer.println("<br>  ... Cmd: " + cmdRunArgs);
+		
+		cliCommand = ctx.buildRequest(cmdRunArgs);
+		String runArgs = executeCommand(ctx,cliCommand, writer, prtTstHtml).toString();
+		List<String> listRunArgs = parseJSONArray(runArgs);
+		
+		for ( String argName : listRunArgs ) {
+			if ( argName.startsWith("-Dspring.datasource.jndi-name"))  {
+				defaultJNDI=argName.substring(argName.indexOf("=java:")+7);
+				writer.println("<br>  ... Default JNDI Name: " +defaultJNDI + " ... " +argName );
+			}
+		}
+		
+		
+		String cmdListDS="ls "+inSrvrPath+"/subsystem=datasources/data-source";
+		//writer.println("<br>  ... Cmd: " + cmdListDS);
+			cliCommand = ctx.buildRequest(cmdListDS);
+			String listDataSource = executeCommand(ctx,cliCommand, writer, prtTstHtml).toString();
+			//writer.println("<br>  ... listDataSrc: " + listDataSource);
+			List<String> dsList = parseJSONArray(listDataSource);
+			
+			for ( String jndiName : dsList ) {
+				if ( jndiName.equals(defaultJNDI)) {
+					writer.println("<br>  *** JNDI Name: " +jndiName + " *** DEFAULT");
+					
+					String cmdJNDIdtl=inSrvrPath+"/subsystem=datasources/data-source="+jndiName+"/statistics=pool:read-resource(include-runtime=true)";
+					//writer.println("<br>  --- Cmd: " + cmdJNDIdtl);
+					cliCommand = ctx.buildRequest(cmdJNDIdtl);
+					ModelNode jndiDtls = executeCommand(ctx,cliCommand, writer, prtTstHtml) ;
+					
+					//writer.println("<br>   --- Result: \n" + jndiDtls.get("result").toString());
+					
+					/*
+					// List of Properties available for this particular ModelNode
+					List<Property> jndiDtlPropList = jndiDtls.get("result").asPropertyList(); //;  .get("result").asPropertyList().toArray();					
+					
+					for ( int i = 0; i < jndiDtlPropList.size() ; i++ ) {
+						writer.println("<br>   --- jndiDtlPropList <"+i+"> : " + jndiDtlPropList.get(i).getName() +"  ... TYPE: "+jndiDtls.get("result").get(jndiDtlPropList.get(i).getName()).getType()) ;
+					}
+					*/
+					
+					int jndiActCnt = jndiDtls.get("result").get("ActiveCount").asInt() ; //.asInt();
+					int jndiAvlCnt = jndiDtls.get("result").get("AvailableCount").asInt();
+					int jndiUseCnt = jndiDtls.get("result").get("InUseCount").asInt();
+					long jndiAvUsgMS = jndiDtls.get("result").get("AverageUsageTime").asLong();
+					long jndiMxUsgMS = jndiDtls.get("result").get("MaxUsageTime").asLong();
+					long jndiTtUsgMS = jndiDtls.get("result").get("TotalUsageTime").asLong();
+					long jndiAvWtMS = jndiDtls.get("result").get("AverageBlockingTime").asLong();
+					long jndiMxWtMS = jndiDtls.get("result").get("MaxWaitTime").asLong();
+					long jndiTtWtMS = jndiDtls.get("result").get("TotalBlockingTime").asLong();
+					
+					writer.println("<br>  ~~> Connection Count     - Active:" + jndiActCnt + " ... In Use: " + jndiUseCnt + " ... Available: " + jndiAvlCnt  );						
+					writer.println("<br>  ~~> Conn Usage Time (ms) - Avg:" + jndiAvUsgMS + " ... Max: " + jndiMxUsgMS + " ... Total: " + jndiTtUsgMS  );						
+					writer.println("<br>  ~~> Conn Wait Time (ms)  - Avg:" + jndiAvWtMS + " ... Max: " + jndiMxWtMS + " ... Total: " + jndiTtWtMS  );
+
+//					if ( statStore) DbStoreMwStats.storeJNDI(false, pgDBconn, tstamp, domainController, dmn+"-"+srvrInst,  
+					if ( statStore) DbStoreMwStats.storeJNDI(false, pgDBconn, tstamp, baseSrv, dmn+"-"+srvrInst,  
+							jndiAvlCnt, jndiActCnt, jndiUseCnt, logger);
+					
+				} else {
+					writer.println("<br>  ... JNDI Name: " +jndiName );
+				}
+			}
+			
+	} catch (CommandFormatException e) {
+			e.printStackTrace();
+	}
+		
+		
+		
+}
+	 
+   private static List<String> parseJSONArray(String JSON) {
+       JsonArray obj = gson.fromJson(JSON, JsonArray.class);
+       return obj.getResult();
+   }
+
+   private static String parseJSONString(String JSON) {
+       JsonString obj = gson.fromJson(JSON, JsonString.class);
+       return obj.getResult();
+   }
+	
+   class JsonArray {
+       List<String> result = new ArrayList<>();
+       public List<String> getResult() {
+           return result;
+       }
+   }
+   class JsonString {
+       String result;
+       public String getResult() {
+           return result;
+       }
+   }
+	public static ModelNode executeCommand(CommandContext ctx,ModelNode modelNode, PrintWriter writer, boolean prtTstHtml) {   
+       
+       ModelControllerClient client = ctx.getModelControllerClient();
+       if(client != null) {
+          try {
+                ModelNode response = client.execute(modelNode);
+                //System.out.println(response);
+                //return (response.toJSONString(false));
+                return response;
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+       } else {
+            writer.println("<br><div style=\"background-color:f00\"<strong>ERROR:</strong>Connection Error! The ModelControllerClient is not available.</div>");
+      }
+       return null;
+  }	
+
+
+}

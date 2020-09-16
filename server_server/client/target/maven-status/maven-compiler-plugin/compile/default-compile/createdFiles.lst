@@ -1,0 +1,3 @@
+endpoint/TestEJbEndpoint.class
+sampleejbservice/ejb/HelloWorldRemote.class
+JAXRSConfiguration.class

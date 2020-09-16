@@ -1,0 +1,12 @@
+<permissions version="7">
+    <permission>
+        <class-name>java.util.PropertyPermission</class-name>
+        <name>*</name>
+        <actions>read,write</actions>
+    </permission>
+    <permission>
+        <class-name>org.jboss.vfs.VirtualFilePermission</class-name>
+        <name>/content/EjbPrint.jar</name>
+      <actions>delete,getfile</actions>
+  </permission>
+</permissions>
