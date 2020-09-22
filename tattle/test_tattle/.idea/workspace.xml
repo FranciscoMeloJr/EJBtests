@@ -55,7 +55,7 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/com/redhat/gss/middleware/tattletale/reports/EAP700.class">
+        <entry file="file://$PROJECT_DIR$/com/redhat/gss/middleware/tattletale/reports/EAP600.class">
           <provider selected="true" editor-type-id="text-editor">
             <state>
               <folding>
@@ -66,7 +66,7 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/com/redhat/gss/middleware/tattletale/reports/EAP600.class">
+        <entry file="file://$PROJECT_DIR$/com/redhat/gss/middleware/tattletale/reports/EAP700.class">
           <provider selected="true" editor-type-id="text-editor">
             <state>
               <folding>
@@ -103,7 +103,7 @@
         <entry file="file://$PROJECT_DIR$/com/redhat/gss/middleware/tattletale/reports/SunJava8Extended.class">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="360">
-              <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+              <caret line="32" selection-start-line="32" selection-end-line="32" />
               <folding>
                 <element signature="e#0#938#0" expanded="true" />
               </folding>
@@ -114,8 +114,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/org/jboss/tattletale/Main.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2370">
-              <caret line="87" column="39" lean-forward="true" selection-start-line="87" selection-start-column="39" selection-end-line="87" selection-end-column="39" />
+            <state relative-caret-position="-1110">
+              <caret line="87" column="39" selection-start-line="87" selection-start-column="39" selection-end-line="87" selection-end-column="39" />
               <folding>
                 <element signature="e#0#31527#0" expanded="true" />
               </folding>
@@ -142,9 +142,8 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1920" />
-    <option name="y" value="227" />
-    <option name="width" value="1910" />
-    <option name="height" value="765" />
+    <option name="width" value="1920" />
+    <option name="height" value="1080" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -241,7 +240,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="27" width="1920" height="1020" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Image Layers" />
       <window_info id="Designer" />
@@ -314,6 +312,15 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/com/redhat/gss/middleware/tattletale/reports/EAP600.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#1065#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/com/redhat/gss/middleware/tattletale/reports/EAP4310.class">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -324,15 +331,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/com/redhat/gss/middleware/tattletale/reports/EAP700.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#1065#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/com/redhat/gss/middleware/tattletale/reports/EAP600.class">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -363,7 +361,7 @@
     <entry file="file://$PROJECT_DIR$/com/redhat/gss/middleware/tattletale/reports/SunJava8Extended.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
-          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
           <folding>
             <element signature="e#0#938#0" expanded="true" />
           </folding>
@@ -372,8 +370,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/org/jboss/tattletale/Main.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2370">
-          <caret line="87" column="39" lean-forward="true" selection-start-line="87" selection-start-column="39" selection-end-line="87" selection-end-column="39" />
+        <state relative-caret-position="-1110">
+          <caret line="87" column="39" selection-start-line="87" selection-start-column="39" selection-end-line="87" selection-end-column="39" />
           <folding>
             <element signature="e#0#31527#0" expanded="true" />
           </folding>

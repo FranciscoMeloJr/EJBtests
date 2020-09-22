@@ -1,3 +1,5 @@
+https://developer.jboss.org/thread/266724
+
 1. Deploy the attached "EJBs_App.ear" on WildFly10
 
 2. Open a terminal and Set the classpath to include the "wildfly-10.0.0.CR3-SNAPSHOT/bin/client/jboss-client.jar"
