@@ -1,0 +1,5 @@
+2020-08-13 16:29:13 GC log file created /example/gc.log
+OpenJDK 64-Bit Server VM (25.252-b10) for linux-amd64 JRE (1.8.0_252-b10), built on Jul 12 2020 19:35:32 by "mockbuild" with gcc 4.4.7 20120313 (Red Hat 4.4.7-23)
+Memory: 4k page, physical 132118184k(2018272k free), swap 5242876k(5242876k free)
+
+CommandLine flags: -XX:+AlwaysPreTouch -XX:CICompilerCount=15 -XX:ConcGCThreads=9 -XX:ErrorFile=/example/path/ -XX:+ExplicitGCInvokesConcurrent -XX:GCLogFileSize=100Mb -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/example/path/ -XX:InitialHeapSize=100Mb -XX:MaxDirectMemorySize=100Mb -XX:MaxHeapSize=100Mb -XX:MinHeapDeltaBytes=100Mb -XX:NumberOfGCLogFiles=5 -XX:-OmitStackTraceInFastThrow -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:ShenandoahMinFreeThreshold=10 -XX:+UnlockExperimentalVMOptions -XX:-UseBiasedLocking -XX:+UseFastUnorderedTimeStamps -XX:+UseGCLogFileRotation -XX:+UseNUMA -XX:+UseNUMAInterleaving -XX:+UseShenandoahGC 

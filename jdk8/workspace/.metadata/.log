@@ -1,0 +1,19 @@
+!SESSION 2020-11-21 21:28:29.355 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.8.0_161
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -DhprofStrictnessWarning=true
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -DhprofStrictnessWarning=true
+
+!ENTRY org.eclipse.mat.ui 1 0 2020-11-21 21:28:51.567
+!MESSAGE Detected compressed references, because with uncompressed 64-bit references the array at 0xae801dd0 would overlap the array at 0xae801db8
+
+!ENTRY org.eclipse.mat.ui 1 0 2020-11-21 21:28:52.057
+!MESSAGE Wrote threads call stacks to /home/fdemeloj/Downloads/cases/EJBtests/jdk8/heap_now.threads
+
+!ENTRY org.eclipse.mat.ui 1 0 2020-11-21 21:28:52.143
+!MESSAGE Heap /home/fdemeloj/Downloads/cases/EJBtests/jdk8/heap_now.hprof contains 791,578 objects
+
+!ENTRY org.eclipse.mat.ui 1 0 2020-11-21 21:28:54.017
+!MESSAGE Removed 81,300 unreachable objects using 3,795,064 bytes
